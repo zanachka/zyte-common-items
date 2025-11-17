@@ -4,9 +4,8 @@ This module registers serialization and deserialization functions for
 top-level Item classes with web-poet's serialization system, enabling support
 for scrapy savefixture and other serialization use cases.
 
-Only top-level items exposed by Zyte Automatic Extraction API are registered:
-product, productList, productNavigation, article, articleList, articleNavigation,
-forumThread, jobPosting, jobPostingNavigation, and serp.
+Registers serialization for all top-level items (one per file) in the
+zyte_common_items.items module, excluding custom_attributes.py.
 """
 
 import json
@@ -57,38 +56,45 @@ def register_all_item_serializations() -> None:
     """Register serialization for top-level Item classes.
 
     This function is called automatically when the package is imported.
-    Only registers serialization for top-level items exposed by Zyte Automatic
-    Extraction API.
+    Registers serialization for all top-level items (one per file) in the
+    zyte_common_items.items module.
     """
-    # Import only top-level item classes exposed by Zyte Automatic Extraction
+    # Import all top-level item classes (one per file in zyte_common_items/items/)
     from zyte_common_items import (
         Article,
         ArticleList,
         ArticleNavigation,
+        BusinessPlace,
         ForumThread,
         JobPosting,
         JobPostingNavigation,
         Product,
         ProductList,
         ProductNavigation,
+        RealEstate,
+        SearchRequestTemplate,
         Serp,
+        SocialMediaPost,
     )
 
-    # List of top-level Item classes to register
-    # These correspond to the items exposed by Zyte Automatic Extraction API:
-    # product, productList, productNavigation, article, articleList,
-    # articleNavigation, forumThread, jobPosting, jobPostingNavigation, serp
+    # List of all top-level Item classes to register
+    # These correspond to the main item defined in each file in
+    # zyte_common_items/items/ (excluding custom_attributes.py)
     item_classes = [
         Article,
         ArticleList,
         ArticleNavigation,
+        BusinessPlace,
         ForumThread,
         JobPosting,
         JobPostingNavigation,
         Product,
         ProductList,
         ProductNavigation,
+        RealEstate,
+        SearchRequestTemplate,
         Serp,
+        SocialMediaPost,
     ]
 
     for item_class in item_classes:

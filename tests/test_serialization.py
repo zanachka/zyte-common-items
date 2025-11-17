@@ -9,6 +9,7 @@ from zyte_common_items import (
     ArticleNavigation,
     Brand,
     Breadcrumb,
+    BusinessPlace,
     ForumThread,
     Gtin,
     Image,
@@ -18,13 +19,16 @@ from zyte_common_items import (
     ProductFromList,
     ProductList,
     ProductNavigation,
+    RealEstate,
+    SearchRequestTemplate,
     Serp,
     SerpOrganicResult,
+    SocialMediaPost,
 )
 
 
 class TestTopLevelItemSerialization:
-    """Test serialization for top-level items exposed by Zyte API."""
+    """Test serialization for all top-level items."""
 
     def test_product_serialization(self):
         """Test Product serialization and deserialization."""
@@ -46,6 +50,7 @@ class TestTopLevelItemSerialization:
         assert deserialized.url == product.url
         assert deserialized.name == product.name
         assert deserialized.price == product.price
+        assert deserialized.brand is not None
         assert deserialized.brand.name == "Test Brand"
 
     def test_product_list_serialization(self):
@@ -60,6 +65,7 @@ class TestTopLevelItemSerialization:
         deserialized = deserialize_leaf(ProductList, serialized)
 
         assert deserialized.url == product_list.url
+        assert deserialized.products is not None
         assert len(deserialized.products) == 1
         assert deserialized.products[0].name == "Product 1"
 
@@ -98,6 +104,7 @@ class TestTopLevelItemSerialization:
         deserialized = deserialize_leaf(ArticleList, serialized)
 
         assert deserialized.url == article_list.url
+        assert deserialized.articles is not None
         assert len(deserialized.articles) == 1
 
     def test_article_navigation_serialization(self):
@@ -156,4 +163,51 @@ class TestTopLevelItemSerialization:
 
         assert deserialized.url == serp.url
         assert deserialized.pageNumber == serp.pageNumber
+        assert deserialized.organicResults is not None
         assert len(deserialized.organicResults) == 1
+
+    def test_business_place_serialization(self):
+        """Test BusinessPlace serialization and deserialization."""
+        place = BusinessPlace(
+            url="https://example.com/place",
+            name="Test Place",
+        )
+        serialized = serialize_leaf(place)
+        deserialized = deserialize_leaf(BusinessPlace, serialized)
+
+        assert deserialized.url == place.url
+        assert deserialized.name == place.name
+
+    def test_real_estate_serialization(self):
+        """Test RealEstate serialization and deserialization."""
+        estate = RealEstate(
+            url="https://example.com/estate",
+            name="Test Estate",
+        )
+        serialized = serialize_leaf(estate)
+        deserialized = deserialize_leaf(RealEstate, serialized)
+
+        assert deserialized.url == estate.url
+        assert deserialized.name == estate.name
+
+    def test_search_request_template_serialization(self):
+        """Test SearchRequestTemplate serialization and deserialization."""
+        template = SearchRequestTemplate(
+            url="https://example.com/search",
+        )
+        serialized = serialize_leaf(template)
+        deserialized = deserialize_leaf(SearchRequestTemplate, serialized)
+
+        assert deserialized.url == template.url
+
+    def test_social_media_post_serialization(self):
+        """Test SocialMediaPost serialization and deserialization."""
+        post = SocialMediaPost(
+            url="https://example.com/post",
+            text="Test post",
+        )
+        serialized = serialize_leaf(post)
+        deserialized = deserialize_leaf(SocialMediaPost, serialized)
+
+        assert deserialized.url == post.url
+        assert deserialized.text == post.text
