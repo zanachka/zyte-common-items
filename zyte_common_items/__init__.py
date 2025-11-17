@@ -259,7 +259,4 @@ except ImportError:  # Scrapy is not installed.
     pass
 
 # Register serialization support for all Item subclasses
-try:
-    from . import serialization  # noqa: F401
-except ImportError:  # web-poet is not installed (shouldn't happen but be safe).
-    pass
+from . import serialization  # noqa: F401
