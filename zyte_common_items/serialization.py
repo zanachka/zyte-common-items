@@ -1,8 +1,12 @@
 """Web-poet serialization support for Zyte Common Items.
 
-This module registers serialization and deserialization functions for all
-Item subclasses with web-poet's serialization system, enabling support for
-scrapy savefixture and other serialization use cases.
+This module registers serialization and deserialization functions for
+top-level Item classes with web-poet's serialization system, enabling support
+for scrapy savefixture and other serialization use cases.
+
+Only top-level items exposed by Zyte Automatic Extraction API are registered:
+product, productList, productNavigation, article, articleList, articleNavigation,
+forumThread, jobPosting, jobPostingNavigation, and serp.
 """
 
 import json
@@ -50,150 +54,41 @@ def _create_serialization_functions(item_class: Type[Item]):
 
 
 def register_all_item_serializations() -> None:
-    """Register serialization for all Item subclasses in the package.
+    """Register serialization for top-level Item classes.
 
     This function is called automatically when the package is imported.
+    Only registers serialization for top-level items exposed by Zyte Automatic
+    Extraction API.
     """
-    # Import all item modules to ensure all Item subclasses are available
+    # Import only top-level item classes exposed by Zyte Automatic Extraction
     from zyte_common_items import (
-        AdditionalProperty,
-        Address,
-        AggregateRating,
-        Amenity,
         Article,
-        ArticleFromList,
         ArticleList,
-        ArticleListMetadata,
-        ArticleMetadata,
         ArticleNavigation,
-        ArticleNavigationMetadata,
-        Audio,
-        Author,
-        BaseMetadata,
-        BaseSalary,
-        Brand,
-        Breadcrumb,
-        BusinessPlace,
-        BusinessPlaceMetadata,
-        CustomAttributes,
-        CustomAttributesMetadata,
-        DetailsMetadata,
         ForumThread,
-        ForumThreadMetadata,
-        Gtin,
-        Header,
-        HiringOrganization,
-        Image,
-        JobLocation,
         JobPosting,
-        JobPostingMetadata,
         JobPostingNavigation,
-        JobPostingNavigationMetadata,
-        Link,
-        ListMetadata,
-        Metadata,
-        NamedLink,
-        OpeningHoursItem,
-        ParentPlace,
-        ProbabilityMetadata,
-        ProbabilityRequest,
         Product,
-        ProductFromList,
         ProductList,
-        ProductListMetadata,
-        ProductMetadata,
         ProductNavigation,
-        ProductNavigationMetadata,
-        ProductVariant,
-        Reactions,
-        RealEstate,
-        RealEstateArea,
-        RealEstateMetadata,
-        Request,
-        SearchMetadata,
-        SearchRequestTemplate,
-        SearchRequestTemplateMetadata,
         Serp,
-        SerpMetadata,
-        SerpOrganicResult,
-        SocialMediaPost,
-        SocialMediaPostAuthor,
-        SocialMediaPostMetadata,
-        StarRating,
-        Topic,
-        Url,
-        Video,
     )
 
-    # List of all Item subclasses to register
+    # List of top-level Item classes to register
+    # These correspond to the items exposed by Zyte Automatic Extraction API:
+    # product, productList, productNavigation, article, articleList,
+    # articleNavigation, forumThread, jobPosting, jobPostingNavigation, serp
     item_classes = [
-        AdditionalProperty,
-        Address,
-        AggregateRating,
-        Amenity,
         Article,
-        ArticleFromList,
         ArticleList,
-        ArticleListMetadata,
-        ArticleMetadata,
         ArticleNavigation,
-        ArticleNavigationMetadata,
-        Audio,
-        Author,
-        BaseMetadata,
-        BaseSalary,
-        Brand,
-        Breadcrumb,
-        BusinessPlace,
-        BusinessPlaceMetadata,
-        CustomAttributes,
-        CustomAttributesMetadata,
-        DetailsMetadata,
         ForumThread,
-        ForumThreadMetadata,
-        Gtin,
-        Header,
-        HiringOrganization,
-        Image,
-        JobLocation,
         JobPosting,
-        JobPostingMetadata,
         JobPostingNavigation,
-        JobPostingNavigationMetadata,
-        Link,
-        ListMetadata,
-        Metadata,
-        NamedLink,
-        OpeningHoursItem,
-        ParentPlace,
-        ProbabilityMetadata,
-        ProbabilityRequest,
         Product,
-        ProductFromList,
         ProductList,
-        ProductListMetadata,
-        ProductMetadata,
         ProductNavigation,
-        ProductNavigationMetadata,
-        ProductVariant,
-        Reactions,
-        RealEstate,
-        RealEstateArea,
-        RealEstateMetadata,
-        Request,
-        SearchMetadata,
-        SearchRequestTemplate,
-        SearchRequestTemplateMetadata,
         Serp,
-        SerpMetadata,
-        SerpOrganicResult,
-        SocialMediaPost,
-        SocialMediaPostAuthor,
-        SocialMediaPostMetadata,
-        StarRating,
-        Topic,
-        Url,
-        Video,
     ]
 
     for item_class in item_classes:
