@@ -42,12 +42,16 @@ def _create_serialization_functions(item_class: Type[Item]):
         return cls.from_dict(json.loads(data["json"]))  # type: ignore[attr-defined]
 
     # Set proper annotations for the singledispatch system
-    serialize_func.__annotations__ = {"o": item_class, "return": SerializedLeafData}
-    deserialize_func.__annotations__ = {
+    serialize_ann = {"o": item_class, "return": SerializedLeafData}
+    serialize_func.__annotations__ = serialize_ann
+    serialize_func.__annotate__ = lambda _: serialize_ann
+    deserialize_ann = {
         "cls": Type[item_class],
         "data": SerializedLeafData,
         "return": item_class,
     }
+    deserialize_func.__annotations__  = deserialize_ann
+    deserialize_func.__annotate__ = lambda _: deserialize_ann
 
     register_serialization(serialize_func, deserialize_func)
 
