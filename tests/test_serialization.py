@@ -1,6 +1,5 @@
 """Tests for web-poet serialization support."""
 
-import pytest
 from web_poet.serialization import deserialize_leaf, serialize_leaf
 
 from zyte_common_items import (
@@ -39,7 +38,7 @@ class TestItemSerialization:
         )
         serialized = serialize_leaf(product)
         assert "json" in serialized
-        
+
         deserialized = deserialize_leaf(Product, serialized)
         assert deserialized.url == product.url
         assert deserialized.name == product.name
@@ -66,7 +65,7 @@ class TestItemSerialization:
         )
         serialized = serialize_leaf(product)
         deserialized = deserialize_leaf(Product, serialized)
-        
+
         assert deserialized.url == product.url
         assert deserialized.name == product.name
         assert deserialized.brand.name == product.brand.name
@@ -87,7 +86,7 @@ class TestItemSerialization:
         )
         serialized = serialize_leaf(article)
         deserialized = deserialize_leaf(Article, serialized)
-        
+
         assert deserialized.url == article.url
         assert deserialized.headline == article.headline
         assert deserialized.datePublished == article.datePublished
@@ -102,7 +101,7 @@ class TestItemSerialization:
         )
         serialized = serialize_leaf(place)
         deserialized = deserialize_leaf(BusinessPlace, serialized)
-        
+
         assert deserialized.url == place.url
         assert deserialized.name == place.name
         assert deserialized.telephone == place.telephone
@@ -116,7 +115,7 @@ class TestItemSerialization:
         )
         serialized = serialize_leaf(job)
         deserialized = deserialize_leaf(JobPosting, serialized)
-        
+
         assert deserialized.url == job.url
         assert deserialized.jobTitle == job.jobTitle
         assert deserialized.employmentType == job.employmentType
@@ -130,7 +129,7 @@ class TestItemSerialization:
         )
         serialized = serialize_leaf(estate)
         deserialized = deserialize_leaf(RealEstate, serialized)
-        
+
         assert deserialized.url == estate.url
         assert deserialized.name == estate.name
         assert deserialized.numberOfRooms == estate.numberOfRooms
@@ -143,7 +142,7 @@ class TestItemSerialization:
         )
         serialized = serialize_leaf(post)
         deserialized = deserialize_leaf(SocialMediaPost, serialized)
-        
+
         assert deserialized.url == post.url
         assert deserialized.text == post.text
 
@@ -158,7 +157,7 @@ class TestItemSerialization:
         )
         serialized = serialize_leaf(product_list)
         deserialized = deserialize_leaf(ProductList, serialized)
-        
+
         assert deserialized.url == product_list.url
         assert len(deserialized.products) == 2
         assert deserialized.products[0].name == "Product 1"
@@ -169,13 +168,17 @@ class TestItemSerialization:
         article_list = ArticleList(
             url="https://example.com/articles",
             articles=[
-                ArticleFromList(url="https://example.com/article1", headline="Article 1"),
-                ArticleFromList(url="https://example.com/article2", headline="Article 2"),
+                ArticleFromList(
+                    url="https://example.com/article1", headline="Article 1"
+                ),
+                ArticleFromList(
+                    url="https://example.com/article2", headline="Article 2"
+                ),
             ],
         )
         serialized = serialize_leaf(article_list)
         deserialized = deserialize_leaf(ArticleList, serialized)
-        
+
         assert deserialized.url == article_list.url
         assert len(deserialized.articles) == 2
         assert deserialized.articles[0].headline == "Article 1"
@@ -192,7 +195,7 @@ class TestItemSerialization:
         )
         serialized = serialize_leaf(serp)
         deserialized = deserialize_leaf(Serp, serialized)
-        
+
         assert deserialized.url == serp.url
         assert deserialized.pageNumber == serp.pageNumber
         assert len(deserialized.organicResults) == 2
@@ -207,7 +210,7 @@ class TestItemSerialization:
         )
         serialized = serialize_leaf(variant)
         deserialized = deserialize_leaf(ProductVariant, serialized)
-        
+
         assert deserialized.name == variant.name
         assert deserialized.color == variant.color
         assert deserialized.size == variant.size
@@ -219,13 +222,13 @@ class TestItemSerialization:
         serialized = serialize_leaf(brand)
         deserialized = deserialize_leaf(Brand, serialized)
         assert deserialized.name == brand.name
-        
+
         # Test Image
         image = Image(url="https://example.com/image.jpg")
         serialized = serialize_leaf(image)
         deserialized = deserialize_leaf(Image, serialized)
         assert deserialized.url == image.url
-        
+
         # Test AggregateRating
         rating = AggregateRating(ratingValue=4.5, reviewCount=100)
         serialized = serialize_leaf(rating)
@@ -238,7 +241,7 @@ class TestItemSerialization:
         prop = AdditionalProperty(name="color", value="red")
         serialized = serialize_leaf(prop)
         deserialized = deserialize_leaf(AdditionalProperty, serialized)
-        
+
         assert deserialized.name == prop.name
         assert deserialized.value == prop.value
 
@@ -250,7 +253,7 @@ class TestItemSerialization:
         )
         serialized = serialize_leaf(product)
         deserialized = deserialize_leaf(Product, serialized)
-        
+
         # ZyteItemAdapter removes empty collections from serialization
         # but deserialization should still work
         assert deserialized.url == product.url
