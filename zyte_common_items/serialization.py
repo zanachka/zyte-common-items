@@ -1,11 +1,8 @@
 """Web-poet serialization support for Zyte Common Items.
 
 This module registers serialization and deserialization functions for
-top-level Item classes with web-poet's serialization system, enabling support
+Item classes with web-poet's serialization system, enabling support
 for scrapy savefixture and other serialization use cases.
-
-Registers serialization for all top-level items (one per file) in the
-zyte_common_items.items module, excluding custom_attributes.py.
 """
 
 import json
@@ -24,86 +21,18 @@ class ZCEItemAdapter(itemadapter.ItemAdapter):
     ADAPTER_CLASSES = [ZyteItemAdapter]
 
 
-def _create_serialization_functions(item_class: Type[Item]):
-    """Create and register serialization functions for an Item subclass.
-
-    This creates functions with proper type annotations that web-poet's
-    singledispatch-based system can recognize.
-    """
-
-    def serialize_func(o: item_class) -> SerializedLeafData:  # type: ignore[valid-type]
-        """Serialize an Item instance to JSON."""
-        item_dict = ZCEItemAdapter(o).asdict()
-        item_json = json.dumps(item_dict, ensure_ascii=False, indent=2)
-        return {"json": item_json.encode()}
-
-    def deserialize_func(cls: Type[item_class], data: SerializedLeafData) -> item_class:  # type: ignore[valid-type]
-        """Deserialize JSON data back to an Item instance."""
-        return cls.from_dict(json.loads(data["json"]))  # type: ignore[attr-defined]
-
-    # Set proper annotations for the singledispatch system
-    serialize_ann = {"o": item_class, "return": SerializedLeafData}
-    serialize_func.__annotations__ = serialize_ann
-    serialize_func.__annotate__ = lambda _: serialize_ann
-    deserialize_ann = {
-        "cls": Type[item_class],
-        "data": SerializedLeafData,
-        "return": item_class,
-    }
-    deserialize_func.__annotations__  = deserialize_ann
-    deserialize_func.__annotate__ = lambda _: deserialize_ann
-
-    register_serialization(serialize_func, deserialize_func)
+def _serialize_item(o: Item) -> SerializedLeafData:
+    """Serialize an Item instance to JSON."""
+    item_dict = ZCEItemAdapter(o).asdict()
+    item_json = json.dumps(item_dict, ensure_ascii=False, indent=2)
+    return {"json": item_json.encode()}
 
 
-def register_all_item_serializations() -> None:
-    """Register serialization for top-level Item classes.
-
-    This function is called automatically when the package is imported.
-    Registers serialization for all top-level items (one per file) in the
-    zyte_common_items.items module.
-    """
-    # Import all top-level item classes (one per file in zyte_common_items/items/)
-    from zyte_common_items import (
-        Article,
-        ArticleList,
-        ArticleNavigation,
-        BusinessPlace,
-        ForumThread,
-        JobPosting,
-        JobPostingNavigation,
-        Product,
-        ProductList,
-        ProductNavigation,
-        RealEstate,
-        SearchRequestTemplate,
-        Serp,
-        SocialMediaPost,
-    )
-
-    # List of all top-level Item classes to register
-    # These correspond to the main item defined in each file in
-    # zyte_common_items/items/ (excluding custom_attributes.py)
-    item_classes = [
-        Article,
-        ArticleList,
-        ArticleNavigation,
-        BusinessPlace,
-        ForumThread,
-        JobPosting,
-        JobPostingNavigation,
-        Product,
-        ProductList,
-        ProductNavigation,
-        RealEstate,
-        SearchRequestTemplate,
-        Serp,
-        SocialMediaPost,
-    ]
-
-    for item_class in item_classes:
-        _create_serialization_functions(item_class)
+def _deserialize_item(cls: Type[Item], data: SerializedLeafData) -> Item:
+    """Deserialize JSON data back to an Item instance."""
+    return cls.from_dict(json.loads(data["json"]))
 
 
-# Register serializations when the module is imported
-register_all_item_serializations()
+# Register serialization for the base Item class
+# This will work for all Item subclasses via singledispatch
+register_serialization(_serialize_item, _deserialize_item)
