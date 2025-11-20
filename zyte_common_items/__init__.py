@@ -257,3 +257,6 @@ try:
     __all__.append("Addon")
 except ImportError:  # Scrapy is not installed.
     pass
+
+# Register serialization support for all Item subclasses
+from . import serialization  # noqa: F401
