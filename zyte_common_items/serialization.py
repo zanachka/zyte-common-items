@@ -1,8 +1,9 @@
 """Web-poet serialization support for Zyte Common Items.
 
 This module registers serialization and deserialization functions for
-Item classes with web-poet's serialization system, enabling support
-for scrapy savefixture and other serialization use cases.
+Item classes with web-poet's serialization system, allowing
+web-poet testing framework to work when page objects use
+zyte-common-items items as dependencies.
 """
 
 import json
